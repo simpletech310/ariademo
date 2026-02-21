@@ -5,6 +5,7 @@ import { Message, IntakeForm } from '@/lib/types'
 import { extractFormJSON, stripFormJSON } from '@/lib/aria'
 import FormPreview from '@/components/FormPreview'
 import OCRUpload from '@/components/OCRUpload'
+import AboutModal from '@/components/AboutModal'
 
 const INITIAL_MESSAGE: Message = {
   id: 'init',
@@ -23,6 +24,7 @@ export default function AriaChat() {
   const [builtForm, setBuiltForm] = useState<IntakeForm | null>(null)
   const [savingForm, setSavingForm] = useState(false)
   const [savedForms, setSavedForms] = useState<string[]>([])
+  const [isAboutOpen, setIsAboutOpen] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -175,8 +177,8 @@ export default function AriaChat() {
           <button
             onClick={() => setActiveTab('chat')}
             className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors mb-1 ${activeTab === 'chat'
-                ? 'bg-sage-50 text-sage-700'
-                : 'text-ink/50 hover:text-ink hover:bg-[#F7F3EE]'
+              ? 'bg-sage-50 text-sage-700'
+              : 'text-ink/50 hover:text-ink hover:bg-[#F7F3EE]'
               }`}
           >
             💬 Build a Form
@@ -184,8 +186,8 @@ export default function AriaChat() {
           <button
             onClick={() => setActiveTab('ocr')}
             className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'ocr'
-                ? 'bg-sage-50 text-sage-700'
-                : 'text-ink/50 hover:text-ink hover:bg-[#F7F3EE]'
+              ? 'bg-sage-50 text-sage-700'
+              : 'text-ink/50 hover:text-ink hover:bg-[#F7F3EE]'
               }`}
           >
             📄 Digitize Paper Form
@@ -230,8 +232,19 @@ export default function AriaChat() {
           ))}
         </div>
 
-        <div className="p-4 border-t border-[#D8D2C8]">
-          <a href="/forms" className="text-xs text-sage-600 hover:underline">→ View all saved forms</a>
+        <div className="p-4 border-t border-[#D8D2C8] space-y-3">
+          <button
+            onClick={() => setIsAboutOpen(true)}
+            className="flex items-center gap-2 text-xs text-ink/40 hover:text-sage-600 transition-colors uppercase tracking-widest font-bold"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+            Project Info
+          </button>
+          <a href="/forms" className="block text-xs text-sage-600 hover:underline">→ View all saved forms</a>
         </div>
       </aside>
 
@@ -255,8 +268,8 @@ export default function AriaChat() {
                   )}
                   <div
                     className={`max-w-[75%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${msg.role === 'user'
-                        ? 'bg-sage-600 text-white rounded-tr-sm'
-                        : 'bg-white border border-[#EDE8E0] text-ink rounded-tl-sm shadow-sm'
+                      ? 'bg-sage-600 text-white rounded-tr-sm'
+                      : 'bg-white border border-[#EDE8E0] text-ink rounded-tl-sm shadow-sm'
                       }`}
                   >
                     {msg.content ? renderMessageContent(msg.content) : (
@@ -334,6 +347,7 @@ export default function AriaChat() {
           </>
         )}
       </div>
+      <AboutModal isOpen={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
     </div>
   )
 }
