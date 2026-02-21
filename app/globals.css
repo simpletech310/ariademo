@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: var(--font-outfit), system-ui, sans-serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+
+  --color-sage-50: #f4f7f4;
+  --color-sage-100: #e7ece7;
+  --color-sage-200: #ced9ce;
+  --color-sage-300: #a7bbae;
+  --color-sage-400: #7a9484;
+  --color-sage-500: #5c7868;
+  --color-sage-600: #496053;
+  --color-sage-700: #3c4e43;
+  --color-sage-800: #323f37;
+  --color-sage-900: #2a342f;
+
+  --color-ink: #2D2926;
+}
+
+@layer base {
+  body {
+    @apply text-ink bg-[#F7F3EE];
+  }
+}
+
+.typing-dot {
+  width: 5px;
+  height: 5px;
+  @apply bg-sage-400 rounded-full animate-bounce;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes message-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.message-enter {
+  animation: message-enter 0.3s ease-out forwards;
+}

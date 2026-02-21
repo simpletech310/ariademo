@@ -3,8 +3,8 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { Message, IntakeForm } from '@/lib/types'
 import { extractFormJSON, stripFormJSON } from '@/lib/aria'
-import FormPreview from './FormPreview'
-import OCRUpload from './OCRUpload'
+import FormPreview from '@/components/FormPreview'
+import OCRUpload from '@/components/OCRUpload'
 
 const INITIAL_MESSAGE: Message = {
   id: 'init',
@@ -174,21 +174,19 @@ export default function AriaChat() {
         <div className="p-3 border-b border-[#D8D2C8]">
           <button
             onClick={() => setActiveTab('chat')}
-            className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors mb-1 ${
-              activeTab === 'chat'
+            className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors mb-1 ${activeTab === 'chat'
                 ? 'bg-sage-50 text-sage-700'
                 : 'text-ink/50 hover:text-ink hover:bg-[#F7F3EE]'
-            }`}
+              }`}
           >
             💬 Build a Form
           </button>
           <button
             onClick={() => setActiveTab('ocr')}
-            className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-              activeTab === 'ocr'
+            className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'ocr'
                 ? 'bg-sage-50 text-sage-700'
                 : 'text-ink/50 hover:text-ink hover:bg-[#F7F3EE]'
-            }`}
+              }`}
           >
             📄 Digitize Paper Form
           </button>
@@ -256,11 +254,10 @@ export default function AriaChat() {
                     </div>
                   )}
                   <div
-                    className={`max-w-[75%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-                      msg.role === 'user'
+                    className={`max-w-[75%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${msg.role === 'user'
                         ? 'bg-sage-600 text-white rounded-tr-sm'
                         : 'bg-white border border-[#EDE8E0] text-ink rounded-tl-sm shadow-sm'
-                    }`}
+                      }`}
                   >
                     {msg.content ? renderMessageContent(msg.content) : (
                       <div className="flex gap-1.5 items-center py-0.5">
@@ -327,8 +324,8 @@ export default function AriaChat() {
                   className="w-10 h-10 rounded-xl bg-sage-600 text-white flex items-center justify-center hover:bg-sage-700 transition-colors disabled:opacity-40 flex-shrink-0"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="22" y1="2" x2="11" y2="13"/>
-                    <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                    <line x1="22" y1="2" x2="11" y2="13" />
+                    <polygon points="22 2 15 22 11 13 2 9 22 2" />
                   </svg>
                 </button>
               </div>
