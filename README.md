@@ -131,6 +131,29 @@ aria-app/
 
 ---
 
+## Deployment
+
+### Frontend (Vercel)
+
+1.  Push your code to GitHub.
+2.  Import the project into [Vercel](https://vercel.com).
+3.  Add the following **Environment Variables** in Settings > Environment Variables:
+    *   `OPENAI_API_KEY`
+    *   `NEXT_PUBLIC_SUPABASE_URL`
+    *   `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+    *   `SUPABASE_SERVICE_ROLE_KEY`
+    *   `OCR_SERVICE_URL` (URL of your hosted Python OCR service)
+
+### OCR Service (Render / Railway / Fly.io)
+
+Since the OCR service uses Python and PaddleOCR, it requires a server with enough memory (~2GB recommended).
+
+1.  Deploy the `ocr-service/` directory to a platform that supports Docker or Python (e.g., [Render](https://render.com)).
+2.  The service runs on port `8001` (set via `uvicorn`).
+3.  Once deployed, copy the service URL and add it to Vercel as `OCR_SERVICE_URL`.
+
+---
+
 ## Part of CareStack Suite
 
 | Agent | Role | Status |
