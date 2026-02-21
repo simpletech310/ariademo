@@ -52,7 +52,7 @@ Fill in your keys:
 ### 4. Start the OCR microservice
 
 ```bash
-cd ocr-service
+# From the project root
 
 # Create a virtual environment (recommended)
 python -m venv venv
@@ -68,7 +68,7 @@ uvicorn main:app --port 8001 --reload
 ### 5. Start Next.js
 
 ```bash
-# In a separate terminal, from aria-app/
+# In a separate terminal, from root/
 npm run dev
 ```
 
@@ -95,10 +95,9 @@ aria-app/
 ├── lib/
 │   ├── aria.ts               # System prompt + form parsing
 │   ├── types.ts              # TypeScript interfaces
-│   └── supabase.ts           # Supabase client
-├── ocr-service/
-│   ├── main.py               # FastAPI + PaddleOCR
-│   └── requirements.txt
+│   ├── supabase.ts           # Supabase client
+├── main.py                   # FastAPI + PaddleOCR microservice
+├── requirements.txt          # Python dependencies
 └── supabase-schema.sql       # DB schema
 ```
 
@@ -126,7 +125,7 @@ aria-app/
 ## Customization
 
 - **Change the AI model**: Edit `app/api/chat/route.ts` — swap `gpt-4o` for `gpt-4o-mini` for a more cost-effective option.
-- **Add OCR languages**: Edit `ocr-service/main.py` → change `lang='en'` to `lang='ch'`, `'fr'`, etc.
+- **Add OCR languages**: Edit `main.py` → change `lang='en'` to `lang='ch'`, `'fr'`, etc.
 - **Extend form field types**: Add to `FieldType` in `lib/types.ts` and `FieldInput` in `FormPreview.tsx`
 
 ---
@@ -148,7 +147,7 @@ aria-app/
 
 Since the OCR service uses Python and PaddleOCR, it requires a server with enough memory (~2GB recommended).
 
-1.  Deploy the `ocr-service/` directory to a platform that supports Docker or Python (e.g., [Render](https://render.com)).
+1.  Deploy the root directory to a platform that supports Docker or Python (e.g., [Render](https://render.com)).
 2.  The service runs on port `8001` (set via `uvicorn`).
 3.  Once deployed, copy the service URL and add it to Vercel as `OCR_SERVICE_URL`.
 
