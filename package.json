@@ -1,0 +1,30 @@
+{
+  "name": "ariademo",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.4",
+    "ai": "^3.4.33",
+    "next": "14.2.32",
+    "openai": "^4.80.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "uuid": "^11.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.23",
+    "@types/react": "^18.3.20",
+    "@types/react-dom": "^18.3.6",
+    "@types/uuid": "^10.0.0",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.0.13",
+    "typescript": "^5.8.2",
+    "@tailwindcss/postcss": "^4.0.13"
+  }
+}
