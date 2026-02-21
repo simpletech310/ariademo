@@ -23,8 +23,25 @@ export async function POST(req: Request) {
         ],
     })
 
-    // Convert the response into a friendly text-stream
-    const stream = OpenAIStream(response as any)
-    // Respond with the stream (raw text mode for manual frontend reader)
-    return new Response(stream)
+    // Stream raw text chunks instead of using the AI SDK protocol
+    const stream = new ReadableStream({
+        async start(controller) {
+            const encoder = new TextEncoder()
+            try {
+                for await (const chunk of response) {
+                    const text = chunk.choices[0]?.delta?.content || ''
+                    if (text) {
+                        controller.enqueue(encoder.encode(text))
+                    }
+                }
+                controller.close()
+            } catch (err) {
+                controller.error(err)
+            }
+        },
+    })
+
+    return new Response(stream, {
+        headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+    })
 }
