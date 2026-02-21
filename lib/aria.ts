@@ -25,16 +25,16 @@ Example format:
 `
 
 export function extractFormJSON(text: string): IntakeForm | null {
-    const match = text.match(/```json-form\n([\s\S]*?)\n```/)
-    if (!match) return null
-    try {
-        return JSON.parse(match[1])
-    } catch (e) {
-        console.error('Failed to parse form JSON:', e)
-        return null
-    }
+  const match = text.match(/```json-form\s*([\s\S]*?)\s*```/)
+  if (!match) return null
+  try {
+    return JSON.parse(match[1])
+  } catch (e) {
+    console.error('Failed to parse form JSON:', e)
+    return null
+  }
 }
 
 export function stripFormJSON(text: string): string {
-    return text.replace(/```json-form[\s\S]*?```/g, '').trim()
+  return text.replace(/```json-form[\s\S]*?```/g, '').trim()
 }
