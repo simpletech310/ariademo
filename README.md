@@ -17,7 +17,7 @@ Part of the **CareStack** nonprofit AI suite. Aria creates digital intake forms 
 ## Stack
 
 - **Next.js 14** (App Router, TypeScript)
-- **Claude claude-3-5-haiku-20241022** — Aria's brain (fast + affordable)
+- **OpenAI GPT-4o** — Aria's brain (fast + affordable)
 - **PaddleOCR** — open-source OCR (runs locally via Python FastAPI)
 - **Supabase** — forms + submissions storage (free tier)
 - **Tailwind CSS** — styling with custom Aria design system
@@ -40,7 +40,7 @@ cp .env.local.example .env.local
 ```
 
 Fill in your keys:
-- `ANTHROPIC_API_KEY` — from [console.anthropic.com](https://console.anthropic.com)
+- `OPENAI_API_KEY` — from [platform.openai.com](https://platform.openai.com)
 - `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` — from your Supabase project settings
 - `SUPABASE_SERVICE_ROLE_KEY` — from Supabase → Settings → API
 
@@ -85,7 +85,7 @@ aria-app/
 │   ├── aria/page.tsx         # Main Aria interface
 │   ├── forms/page.tsx        # Form management
 │   └── api/
-│       ├── chat/route.ts     # Claude streaming API
+│       ├── chat/route.ts     # OpenAI streaming API
 │       ├── ocr/route.ts      # OCR pipeline
 │       └── forms/route.ts    # Form CRUD
 ├── components/
@@ -125,7 +125,7 @@ aria-app/
 
 ## Customization
 
-- **Change the AI model**: Edit `app/api/chat/route.ts` — swap `claude-3-5-haiku-20241022` for `claude-opus-4-5` for more complex form generation
+- **Change the AI model**: Edit `app/api/chat/route.ts` — swap `gpt-4o` for `gpt-4o-mini` for a more cost-effective option.
 - **Add OCR languages**: Edit `ocr-service/main.py` → change `lang='en'` to `lang='ch'`, `'fr'`, etc.
 - **Extend form field types**: Add to `FieldType` in `lib/types.ts` and `FieldInput` in `FormPreview.tsx`
 
