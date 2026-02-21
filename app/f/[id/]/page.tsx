@@ -14,6 +14,7 @@ export default function PublicForm() {
 
     useEffect(() => {
         async function fetchForm() {
+            if (!params.id) return
             try {
                 const res = await fetch(`/api/forms/${params.id}`)
                 if (!res.ok) throw new Error('Form not found')
@@ -25,7 +26,7 @@ export default function PublicForm() {
                 setLoading(false)
             }
         }
-        if (params.id) fetchForm()
+        fetchForm()
     }, [params.id])
 
     const handleSubmit = async (e: React.FormEvent) => {
