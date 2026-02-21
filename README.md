@@ -1,0 +1,140 @@
+# Aria — AI Intake Agent 🌿
+
+Part of the **CareStack** nonprofit AI suite. Aria creates digital intake forms through conversation, digitizes paper forms with OCR, and keeps every submission organized.
+
+---
+
+## What Aria Does
+
+| Feature | Description |
+|---|---|
+| **Conversational Form Builder** | Chat with Aria → she asks questions → generates a complete intake form |
+| **OCR Digitization** | Upload a photo of a paper form → PaddleOCR extracts text → Aria structures it |
+| **Form Management** | All forms saved to Supabase, shareable, trackable |
+
+---
+
+## Stack
+
+- **Next.js 14** (App Router, TypeScript)
+- **Claude claude-3-5-haiku-20241022** — Aria's brain (fast + affordable)
+- **PaddleOCR** — open-source OCR (runs locally via Python FastAPI)
+- **Supabase** — forms + submissions storage (free tier)
+- **Tailwind CSS** — styling with custom Aria design system
+
+---
+
+## Quick Start
+
+### 1. Clone & Install
+
+```bash
+cd aria-app
+npm install
+```
+
+### 2. Set up environment variables
+
+```bash
+cp .env.local.example .env.local
+```
+
+Fill in your keys:
+- `ANTHROPIC_API_KEY` — from [console.anthropic.com](https://console.anthropic.com)
+- `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` — from your Supabase project settings
+- `SUPABASE_SERVICE_ROLE_KEY` — from Supabase → Settings → API
+
+### 3. Set up Supabase
+
+1. Create a free project at [supabase.com](https://supabase.com)
+2. Go to SQL Editor and run the contents of `supabase-schema.sql`
+
+### 4. Start the OCR microservice
+
+```bash
+cd ocr-service
+
+# Create a virtual environment (recommended)
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# Install dependencies (PaddleOCR will download models on first run ~500MB)
+pip install -r requirements.txt
+
+# Start the service
+uvicorn main:app --port 8001 --reload
+```
+
+### 5. Start Next.js
+
+```bash
+# In a separate terminal, from aria-app/
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000)
+
+---
+
+## Project Structure
+
+```
+aria-app/
+├── app/
+│   ├── page.tsx              # Landing page
+│   ├── aria/page.tsx         # Main Aria interface
+│   ├── forms/page.tsx        # Form management
+│   └── api/
+│       ├── chat/route.ts     # Claude streaming API
+│       ├── ocr/route.ts      # OCR pipeline
+│       └── forms/route.ts    # Form CRUD
+├── components/
+│   ├── AriaChat.tsx          # Main chat interface
+│   ├── FormPreview.tsx       # Form renderer
+│   └── OCRUpload.tsx         # Drag-and-drop OCR
+├── lib/
+│   ├── aria.ts               # System prompt + form parsing
+│   ├── types.ts              # TypeScript interfaces
+│   └── supabase.ts           # Supabase client
+├── ocr-service/
+│   ├── main.py               # FastAPI + PaddleOCR
+│   └── requirements.txt
+└── supabase-schema.sql       # DB schema
+```
+
+---
+
+## How Aria Builds Forms
+
+1. User tells Aria their org type and program
+2. Aria asks about who fills the form and what data is needed
+3. Once Aria has enough info, she outputs a `form-json` block
+4. The frontend parses this JSON into a live form preview
+5. User saves → form stored in Supabase
+
+## OCR Pipeline
+
+1. User uploads image via drag-and-drop
+2. Next.js API route forwards to Python FastAPI service
+3. PaddleOCR runs text extraction with angle correction
+4. Raw text + parsed fields returned
+5. Aria receives the raw text and structures it into `form-json`
+6. Form appears in chat + can be saved
+
+---
+
+## Customization
+
+- **Change the AI model**: Edit `app/api/chat/route.ts` — swap `claude-3-5-haiku-20241022` for `claude-opus-4-5` for more complex form generation
+- **Add OCR languages**: Edit `ocr-service/main.py` → change `lang='en'` to `lang='ch'`, `'fr'`, etc.
+- **Extend form field types**: Add to `FieldType` in `lib/types.ts` and `FieldInput` in `FormPreview.tsx`
+
+---
+
+## Part of CareStack Suite
+
+| Agent | Role | Status |
+|---|---|---|
+| **Aria** | Intake forms + OCR | ✅ This app |
+| **Keith** | Resource matching network | 🔜 Coming next |
+| **Travis** | Case management assistant | 🔜 Coming next |
