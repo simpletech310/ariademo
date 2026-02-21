@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { ARIA_SYSTEM_PROMPT } from '@/lib/aria'
 
 interface OCRUploadProps {
     onResult: (ariaResponse: string) => void
@@ -26,17 +25,23 @@ export default function OCRUpload({ onResult }: OCRUploadProps) {
                 body: formData,
             })
 
-            if (!res.ok) throw new Error('OCR Failed')
             const data = await res.json()
 
+            if (!res.ok) {
+                if (res.status === 422 && data.isPdf) {
+                    throw new Error('For PDF files, please upload a clear screenshot or photo of the page for better results. Support for multi-page PDFs is coming soon!')
+                }
+                throw new Error(data.error || 'Transcription failed')
+            }
+
             // 2. Wrap text for Aria to process
-            const prompt = `I've digitized a paper form using OCR. Here is the raw text extracted. Please analyze it and generate a structured digital version of this form.\n\nRAW OCR TEXT:\n${data.raw_text}`
+            const prompt = `I've digitized a paper form using OCR. Here is the transcription of the form contents. Please analyze it and generate a structured digital version of this form.\n\nRAW TRANSCRIBED TEXT:\n${data.raw_text}`
 
             // We pass this "user-like" prompt message back up
             onResult(prompt)
 
-        } catch (err) {
-            setError('Could not process this image. Please try another or a higher-resolution scan.')
+        } catch (err: any) {
+            setError(err.message || 'Could not process this file. Please try a high-resolution JPG or PNG photo.')
         } finally {
             setIsUploading(false)
         }
@@ -44,7 +49,7 @@ export default function OCRUpload({ onResult }: OCRUploadProps) {
 
     return (
         <div className="flex-1 flex flex-col items-center justify-center p-8 bg-[#F7F3EE]">
-            <div className="max-w-md w-full bg-white rounded-2xl border-2 border-dashed border-[#D8D2C8] p-12 text-center">
+            <div className="max-w-md w-full bg-white rounded-3xl border border-[#D8D2C8] p-12 text-center shadow-sm">
                 <div className="w-16 h-16 bg-sage-50 rounded-full flex items-center justify-center mx-auto mb-6">
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-sage-600">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -53,18 +58,34 @@ export default function OCRUpload({ onResult }: OCRUploadProps) {
                     </svg>
                 </div>
 
-                <h3 className="text-lg font-display font-semibold text-ink mb-2">Digitize a Paper Form</h3>
-                <p className="text-sm text-ink/50 mb-8 leading-relaxed">
-                    Upload a clear photo or scan of your existing paper intake form. Aria will transcribe and structure it for you.
+                <h3 className="text-xl font-display font-bold text-ink mb-2 italic">Digitize your paper form</h3>
+                <p className="text-sm text-ink/40 mb-10 leading-relaxed px-4">
+                    Upload a clear photo or screenshot of your paper intake form. Aria will transcribe it and turn it into a digital version instantly.
                 </p>
 
-                <label className={`block w-full py-3 px-4 rounded-xl font-medium text-sm transition-all cursor-pointer ${isUploading ? 'bg-sage-100 text-sage-400 pointer-events-none' : 'bg-sage-600 text-white hover:bg-sage-700'
-                    }`}>
-                    {isUploading ? 'Extracting text...' : 'Select File (JPG, PNG, PDF)'}
-                    <input type="file" className="hidden" accept="image/*,application/pdf" onChange={handleFileUpload} />
-                </label>
+                <div className="space-y-4">
+                    <label className={`block w-full py-4 px-6 rounded-2xl font-bold text-sm shadow-lg shadow-sage-600/10 transition-all cursor-pointer ${isUploading ? 'bg-sage-100 text-sage-400 pointer-events-none' : 'bg-sage-600 text-white hover:bg-sage-700 active:scale-95'
+                        }`}>
+                        {isUploading ? (
+                            <div className="flex items-center justify-center gap-2">
+                                <div className="typing-dot bg-white" />
+                                <div className="typing-dot bg-white" />
+                                <div className="typing-dot bg-white" />
+                            </div>
+                        ) : 'Select Photo or Screenshot'}
+                        <input type="file" className="hidden" accept="image/*,application/pdf" onChange={handleFileUpload} />
+                    </label>
 
-                {error && <p className="mt-4 text-xs text-red-500">{error}</p>}
+                    <p className="text-[10px] text-ink/20 uppercase tracking-widest font-bold">
+                        Supports JPG, PNG & Multi-page Screenshots
+                    </p>
+                </div>
+
+                {error && (
+                    <div className="mt-6 p-4 bg-red-50 rounded-2xl border border-red-100 animate-in fade-in slide-in-from-top-2">
+                        <p className="text-xs text-red-600 leading-relaxed">{error}</p>
+                    </div>
+                )}
             </div>
         </div>
     )
