@@ -6,20 +6,24 @@ interface OCRUploadProps {
 
 export default function OCRUpload({ onResult }: OCRUploadProps) {
     const [isUploading, setIsUploading] = useState(false)
+    const [uploadProgress, setUploadProgress] = useState<string | null>(null)
     const [error, setError] = useState<string | null>(null)
 
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0]
-        if (!file) return
+        const files = Array.from(e.target.files || [])
+        if (files.length === 0) return
 
         setIsUploading(true)
         setError(null)
+        setUploadProgress(files.length > 1 ? `Processing ${files.length} images...` : 'Extracting text...')
 
         const formData = new FormData()
-        formData.append('file', file)
+        files.forEach(file => {
+            formData.append('file', file)
+        })
 
         try {
-            // 1. Send to OCR backend
+            // 1. Send all to OCR backend
             const res = await fetch('/api/ocr', {
                 method: 'POST',
                 body: formData,
@@ -29,21 +33,22 @@ export default function OCRUpload({ onResult }: OCRUploadProps) {
 
             if (!res.ok) {
                 if (res.status === 422 && data.isPdf) {
-                    throw new Error('For PDF files, please upload a clear screenshot or photo of the page for better results. Support for multi-page PDFs is coming soon!')
+                    throw new Error('For PDF files, please upload clear screenshots or photos of each page. Support for multi-page PDFs is coming soon!')
                 }
                 throw new Error(data.error || 'Transcription failed')
             }
 
             // 2. Wrap text for Aria to process
-            const prompt = `I've digitized a paper form using OCR. Here is the transcription of the form contents. Please analyze it and generate a structured digital version of this form.\n\nRAW TRANSCRIBED TEXT:\n${data.raw_text}`
+            const prompt = `I've digitized a paper form using OCR across ${files.length} pages. Here is the consolidated transcription of the form contents. Please analyze it and generate a structured digital version of this form.\n\nRAW TRANSCRIBED TEXT:\n${data.raw_text}`
 
             // We pass this "user-like" prompt message back up
             onResult(prompt)
 
         } catch (err: any) {
-            setError(err.message || 'Could not process this file. Please try a high-resolution JPG or PNG photo.')
+            setError(err.message || 'Could not process these files. Please try high-resolution JPG or PNG photos.')
         } finally {
             setIsUploading(false)
+            setUploadProgress(null)
         }
     }
 
@@ -60,7 +65,7 @@ export default function OCRUpload({ onResult }: OCRUploadProps) {
 
                 <h3 className="text-xl font-display font-bold text-ink mb-2 italic">Digitize your paper form</h3>
                 <p className="text-sm text-ink/40 mb-10 leading-relaxed px-4">
-                    Upload a clear photo or screenshot of your paper intake form. Aria will transcribe it and turn it into a digital version instantly.
+                    Upload clear photos or screenshots of your paper intake form. You can select multiple images if the form has several pages.
                 </p>
 
                 <div className="space-y-4">
@@ -68,16 +73,23 @@ export default function OCRUpload({ onResult }: OCRUploadProps) {
                         }`}>
                         {isUploading ? (
                             <div className="flex items-center justify-center gap-2">
+                                <span className="mr-2 text-xs">{uploadProgress}</span>
                                 <div className="typing-dot bg-white" />
                                 <div className="typing-dot bg-white" />
                                 <div className="typing-dot bg-white" />
                             </div>
-                        ) : 'Select Photo or Screenshot'}
-                        <input type="file" className="hidden" accept="image/*,application/pdf" onChange={handleFileUpload} />
+                        ) : 'Select Photos or Screenshots'}
+                        <input
+                            type="file"
+                            className="hidden"
+                            accept="image/*,application/pdf"
+                            onChange={handleFileUpload}
+                            multiple
+                        />
                     </label>
 
                     <p className="text-[10px] text-ink/20 uppercase tracking-widest font-bold">
-                        Supports JPG, PNG & Multi-page Screenshots
+                        Hold Command/Shift to select multiple images
                     </p>
                 </div>
 

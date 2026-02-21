@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
 
-// Edge runtime for speed, but Node is fine for OCR
 export const dynamic = 'force-dynamic'
 
 const openai = new OpenAI({
@@ -11,47 +10,53 @@ const openai = new OpenAI({
 export async function POST(req: NextRequest) {
     try {
         const formData = await req.formData()
-        const file = formData.get('file') as File
+        const files = formData.getAll('file') as File[]
 
-        if (!file) {
-            return NextResponse.json({ error: 'No file provided' }, { status: 400 })
+        if (!files || files.length === 0) {
+            return NextResponse.json({ error: 'No files provided' }, { status: 400 })
         }
 
-        // OpenAI Vision handles common image formats. 
-        // For PDF, we'll need a conversion step (handled by caller or indicated as error)
-        if (file.type === 'application/pdf') {
-            // We'll return a specific error if it's a PDF for now, 
-            // until we add client-side conversion or a PDF-specific parser.
-            return NextResponse.json({
-                error: 'PDF conversion error. Please upload a photo (JPG/PNG) or wait for PDF support.',
-                isPdf: true
-            }, { status: 422 })
-        }
+        const imageContent: any[] = []
 
-        const bytes = await file.arrayBuffer()
-        const base64 = Buffer.from(bytes).toString('base64')
+        for (const file of files) {
+            if (file.type === 'application/pdf') {
+                return NextResponse.json({
+                    error: 'PDF conversion error. Please upload photos (JPG/PNG) or screenshots of each page.',
+                    isPdf: true
+                }, { status: 422 })
+            }
+
+            const bytes = await file.arrayBuffer()
+            const base64 = Buffer.from(bytes).toString('base64')
+
+            imageContent.push({
+                type: "image_url",
+                image_url: {
+                    "url": `data:${file.type};base64,${base64}`,
+                    "detail": "high"
+                },
+            })
+        }
 
         const response = await openai.chat.completions.create({
             model: "gpt-4o",
             messages: [
                 {
                     role: "system",
-                    content: "You are a professional OCR assistant. Transcribe ALL text from the provided image of a form. Preserve the structure as much as possible. If there are checkboxes, indicate if they are checked [x] or empty [ ]. Capture every label and the data written near it."
+                    content: "You are a professional OCR assistant. Transcribe ALL text from the provided images of a form. These images represent pages of a single form. Preserve the structure as much as possible. If there are checkboxes, indicate if they are checked [x] or empty [ ]. Capture every label and the data written near it. Consolidate everything into a coherent transcription."
                 },
                 {
                     role: "user",
                     content: [
                         {
-                            type: "image_url",
-                            image_url: {
-                                "url": `data:${file.type};base64,${base64}`,
-                                "detail": "high"
-                            },
+                            type: "text",
+                            text: `Please transcribe these ${files.length} images of a form.`
                         },
+                        ...imageContent
                     ],
                 },
             ],
-            max_tokens: 2000,
+            max_tokens: 4000,
         })
 
         const raw_text = response.choices[0]?.message?.content || ''
@@ -62,13 +67,13 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json({
             raw_text,
-            fields: [], // Aria will parse fields from raw_text
+            fields: [],
             confidence_avg: 0.95
         })
     } catch (error: any) {
         console.error('OCR Vision Failure:', error)
         return NextResponse.json({
-            error: error.message || 'Failed to process image with Vision model'
+            error: error.message || 'Failed to process images with Vision model'
         }, { status: 500 })
     }
 }
