@@ -16,19 +16,19 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Header */}
-                <div className="p-8 border-b border-[#F0EDEA] flex items-center justify-between bg-sage-50/30">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-sage-600 flex items-center justify-center shadow-lg shadow-sage-600/20">
-                            <span className="text-white font-display font-bold text-lg">A</span>
+                <div className="p-8 border-b border-[#F0EDEA] flex items-center justify-between bg-white relative">
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-sage-600 flex items-center justify-center shadow-xl shadow-sage-600/20 rotate-3 transition-transform hover:rotate-0">
+                            <span className="text-white font-display font-black text-xl">T</span>
                         </div>
                         <div>
-                            <h2 className="text-xl font-display font-bold text-ink">About Aria</h2>
-                            <p className="text-[10px] text-sage-600 font-bold uppercase tracking-widest">Tech Advancement Demo</p>
+                            <h2 className="text-2xl font-display font-black text-ink italic tracking-tight">Meet Thomas</h2>
+                            <p className="text-[10px] text-sage-600 font-bold uppercase tracking-[0.2em]">Product leader · Builder · advocate</p>
                         </div>
                     </div>
                     <button
                         onClick={onClose}
-                        className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-ink/30 hover:text-ink hover:shadow-md transition-all border border-[#F0EDEA]"
+                        className="w-10 h-10 rounded-full bg-[#F7F3EE] flex items-center justify-center text-ink/30 hover:text-ink hover:bg-sage-100/50 transition-all border border-transparent hover:border-sage-200"
                     >
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                             <line x1="18" y1="6" x2="6" y2="18" />
@@ -38,61 +38,86 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 overflow-y-auto p-10 space-y-10">
-                    {/* Mission Section */}
-                    <section>
-                        <h3 className="text-[11px] font-bold text-sage-600 uppercase tracking-[0.2em] mb-4">The Mission</h3>
-                        <p className="text- ink text-base leading-relaxed font-medium mb-4">
-                            Aria was built to show how <span className="text-sage-700 font-bold">small but strategic advancements in tech</span> can fundamentally transform how organizations serve their communities.
-                        </p>
-                        <p className="text-ink/60 text-sm leading-relaxed">
-                            By combining conversational AI with high-fidelity OCR, Aria eliminates the bottleneck of manual data entry, allowing nonprofits to spend more time on impact and less on paperwork.
-                        </p>
-                    </section>
+                <div className="flex-1 overflow-y-auto p-10 space-y-12">
+                    {/* Headline and Bio */}
+                    <div className="space-y-6">
+                        <div className="space-y-4">
+                            <h3 className="text-xs font-black uppercase tracking-[0.25em] text-sage-600 border-l-4 border-sage-200 pl-4">The Perspective</h3>
+                            <p className="text-lg font-display font-bold text-ink leading-snug">
+                                AI Product Manager · IT Director · Builder
+                            </p>
+                        </div>
 
-                    {/* Tech Stack Section */}
-                    <section className="bg-[#F7F3EE]/50 rounded-2xl p-6 border border-[#F0EDEA]">
-                        <h3 className="text-[11px] font-bold text-ink/40 uppercase tracking-[0.2em] mb-4">Inside the Tech</h3>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-1">
-                                <p className="text-xs font-bold text-ink">Cognition</p>
-                                <p className="text-[11px] text-ink/50">GPT-4o Reasoning & Form Logic</p>
+                        <div className="text-ink/70 text-sm leading-relaxed space-y-4">
+                            <p>
+                                I've spent **15+ years** at the intersection of technology and people — managing 700+ endpoints across 30+ locations, leading digital transformations for organizations that couldn't afford to get it wrong.
+                            </p>
+                            <p className="text-ink font-medium">
+                                But the work I'm most proud of doesn't show up on a service delivery report.
+                            </p>
+                            <p>
+                                I run **Forever Forward**, a nonprofit in Los Angeles that serves fathers rebuilding their lives. When I needed a smarter way to manage cases, coordinate resources, and stay connected with clients after hours, I didn't find a tool that fit — so I built one. That's how **CareStack** was born.
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* The Agents Section */}
+                    <div className="bg-[#FAF9F7] rounded-3xl p-8 border border-[#EDE8E0] space-y-6">
+                        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-ink/30 text-center">The CareStack Suite</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="space-y-2">
+                                <div className="text-sage-600 font-display font-black text-lg italic">Aria.</div>
+                                <p className="text-[11px] text-ink/60 leading-relaxed">Eliminates paper intake bottlenecks with conversational form building and OCR.</p>
                             </div>
-                            <div className="space-y-1">
-                                <p className="text-xs font-bold text-ink">Vision</p>
-                                <p className="text-[11px] text-ink/50">OpenAI Vision OCR Pipeline</p>
+                            <div className="space-y-2">
+                                <div className="text-sage-600 font-display font-black text-lg italic">Keith.</div>
+                                <p className="text-[11px] text-ink/60 leading-relaxed">Connects people in crisis to the right nonprofit on the first try.</p>
                             </div>
-                            <div className="space-y-1">
-                                <p className="text-xs font-bold text-ink">Database</p>
-                                <p className="text-[11px] text-ink/50">Supabase Real-time Storage</p>
-                            </div>
-                            <div className="space-y-1">
-                                <p className="text-xs font-bold text-ink">Interface</p>
-                                <p className="text-[11px] text-ink/50">Next.js 14 & Tailwind CSS</p>
+                            <div className="space-y-2">
+                                <div className="text-sage-600 font-display font-black text-lg italic">Travis.</div>
+                                <p className="text-[11px] text-ink/60 leading-relaxed">Gives case managers a 24/7 assistant that actually knows each client's case.</p>
                             </div>
                         </div>
-                    </section>
+                        <p className="text-[10px] text-ink/40 italic text-center pt-4 border-t border-ink/5">
+                            "So no one falls through the cracks at 11pm on a Tuesday."
+                        </p>
+                    </div>
 
-                    {/* Thomas Section */}
-                    <section className="border-t border-[#F0EDEA] pt-10">
-                        <div className="flex flex-col md:flex-row gap-8 items-start">
-                            <div className="flex-1">
-                                <h3 className="text-[11px] font-bold text-sage-600 uppercase tracking-[0.2em] mb-4">Meet the Developer</h3>
-                                <h4 className="text-2xl font-display font-bold text-ink mb-1 italic">Thomas</h4>
-                                <p className="text-xs text-ink/40 font-bold uppercase tracking-widest mb-4">AI, Cloud & Networking Specialist</p>
-                                <p className="text-ink/60 text-sm leading-relaxed mb-6">
-                                    With <span className="text-sage-700 font-bold">10+ years of experience</span> across technical infrastructure, networking, and cloud architecture, Thomas specializes in deploying advanced AI/ML solutions that solve real-world operational challenges.
+                    {/* Full Stack View */}
+                    <div className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-5 gap-8 items-center">
+                            <div className="md:col-span-3 space-y-4 text-ink/70 text-sm leading-relaxed">
+                                <p>
+                                    This portfolio is proof of concept. It's also proof of perspective. I bring something most AI builders don't: I've been the IT director troubleshooting infrastructure, the consultant selling the solution, and the nonprofit founder sitting across from someone who needed help.
                                 </p>
-
-                                <div className="flex items-center gap-4">
-                                    <button className="px-6 py-2.5 bg-sage-600 text-white rounded-xl text-xs font-bold hover:bg-sage-700 transition-all shadow-lg shadow-sage-600/20">
-                                        Let's Collaborate
-                                    </button>
-                                    <p className="text-[10px] text-ink/30 italic">Reach out to discuss custom solutions.</p>
-                                </div>
+                                <p className="font-bold text-ink">
+                                    That full-stack view of how technology actually gets used — and where it fails — is what I build from.
+                                </p>
+                            </div>
+                            <div className="md:col-span-2 bg-sage-600 p-6 rounded-2xl text-white rotate-1 shadow-xl">
+                                <p className="text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Philosophy</p>
+                                <p className="text-sm font-display font-bold italic leading-tight">
+                                    "Technology should amplify human potential, not replace it."
+                                </p>
                             </div>
                         </div>
-                    </section>
+                    </div>
+
+                    {/* Call to Action */}
+                    <div className="pt-10 border-t border-[#F0EDEA] flex flex-col items-center text-center space-y-6">
+                        <p className="text-ink/60 text-sm max-w-md">
+                            If you're building something in the nonprofit or human services space and need a product leader who can go from whiteboard to working demo — let's talk.
+                        </p>
+                        <div className="flex flex-col items-center gap-2">
+                            <a
+                                href="mailto:wilform.thomas@gmail.com"
+                                className="px-10 py-4 bg-sage-600 text-white rounded-2xl font-bold hover:bg-sage-700 transition-all shadow-xl shadow-sage-600/20 active:scale-95"
+                            >
+                                Reach out → wilform.thomas@gmail.com
+                            </a>
+                            <p className="text-[10px] text-ink/30 font-bold uppercase tracking-[0.2em]">Los Angeles Metro</p>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Footer */}
