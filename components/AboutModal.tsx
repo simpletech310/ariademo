@@ -50,13 +50,13 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
 
                         <div className="text-ink/70 text-sm leading-relaxed space-y-4">
                             <p>
-                                I've spent **15+ years** at the intersection of technology and people — managing 700+ endpoints across 30+ locations, leading digital transformations for organizations that couldn't afford to get it wrong.
+                                I've spent <span className="text-ink font-bold">15+ years</span> at the intersection of technology and people — managing 700+ endpoints across 30+ locations, leading digital transformations for organizations that couldn't afford to get it wrong.
                             </p>
                             <p className="text-ink font-medium">
                                 But the work I'm most proud of doesn't show up on a service delivery report.
                             </p>
                             <p>
-                                I run **Forever Forward**, a nonprofit in Los Angeles that serves fathers rebuilding their lives. When I needed a smarter way to manage cases, coordinate resources, and stay connected with clients after hours, I didn't find a tool that fit — so I built one. That's how **CareStack** was born.
+                                I run <span className="text-ink font-bold">Forever Forward</span>, a nonprofit in Los Angeles that serves fathers rebuilding their lives. When I needed a smarter way to manage cases, coordinate resources, and stay connected with clients after hours, I didn't find a tool that fit — so I built one. That's how <span className="text-ink font-bold">CareStack</span> was born.
                             </p>
                         </div>
                     </div>
