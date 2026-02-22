@@ -84,3 +84,21 @@ create policy "Public update" on intake_forms for update using (true);
 
 alter table form_submissions enable row level security;
 create policy "Public insert submissions" on form_submissions for insert with check (true);
+
+-- STORAGE BUCKET CONFIGURATION
+-- Note: Run these to set up the 'form-attachments' bucket if not created via dashboard
+
+-- 1. Create the bucket
+insert into storage.buckets (id, name, public) 
+values ('form-attachments', 'form-attachments', true)
+on conflict (id) do nothing;
+
+-- 2. Allow public uploads to 'submissions/' folder
+create policy "Allow public uploads"
+on storage.objects for insert
+with check ( bucket_id = 'form-attachments' );
+
+-- 3. Allow public reading of attachments
+create policy "Allow public read"
+on storage.objects for select
+using ( bucket_id = 'form-attachments' );

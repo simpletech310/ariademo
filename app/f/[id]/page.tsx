@@ -253,12 +253,58 @@ export default function PublicForm() {
                           />
                         </div>
                       ) : field.type === 'file' ? (
-                        <div className="w-full px-4 py-6 bg-sage-50/30 border-2 border-dashed border-[#D8D2C8] rounded-xl flex flex-col items-center gap-2">
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-sage-400">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />
-                          </svg>
-                          <p className="text-[10px] text-ink/40 font-bold uppercase tracking-wider">Storage Integration Required</p>
-                          <span className="text-[10px] text-sage-600/60 font-medium">Click to select files (Disabled)</span>
+                        <div className="space-y-2">
+                          <div className={`relative w-full px-4 py-6 bg-sage-50/30 border-2 border-dashed rounded-xl flex flex-col items-center gap-2 transition-all ${formData[`${field.id}_loading`] ? 'border-sage-400 animate-pulse' : formData[field.id] ? 'border-sage-500 bg-sage-50' : 'border-[#D8D2C8]'}`}>
+                            {formData[field.id] ? (
+                              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-sage-600">
+                                <polyline points="20 6 9 17 4 12" />
+                              </svg>
+                            ) : (
+                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-sage-400">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />
+                              </svg>
+                            )}
+                            <p className="text-[10px] text-ink/40 font-bold uppercase tracking-wider">
+                              {formData[`${field.id}_loading`] ? 'Uploading...' : formData[field.id] ? 'File Attached Successfully' : 'Upload supporting document'}
+                            </p>
+                            <input
+                              type="file"
+                              className="absolute inset-0 opacity-0 cursor-pointer"
+                              disabled={formData[`${field.id}_loading`]}
+                              onChange={async (e) => {
+                                const file = e.target.files?.[0]
+                                if (!file) return
+
+                                handleInputChange(`${field.id}_loading`, true)
+                                const fData = new FormData()
+                                fData.append('file', file)
+                                fData.append('formId', params.id as string)
+
+                                try {
+                                  const res = await fetch('/api/upload', {
+                                    method: 'POST',
+                                    body: fData
+                                  })
+                                  const result = await res.json()
+                                  if (result.success) {
+                                    handleInputChange(field.id, result.url)
+                                  }
+                                } catch (err) {
+                                  console.error('Upload failed:', err)
+                                } finally {
+                                  handleInputChange(`${field.id}_loading`, false)
+                                }
+                              }}
+                            />
+                            {formData[field.id] && (
+                              <span className="text-[9px] text-sage-600 font-medium truncate max-w-full px-4">
+                                {formData[field.id].split('/').pop()}
+                              </span>
+                            )}
+                          </div>
+                          {field.required && !formData[field.id] && (
+                            <p className="text-[9px] text-red-400 px-1 italic">Attachment required to complete intake</p>
+                          )}
                         </div>
                       ) : (
                         <input
